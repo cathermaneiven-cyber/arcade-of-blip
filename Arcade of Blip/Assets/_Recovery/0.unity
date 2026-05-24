@@ -3760,7 +3760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd7170ff637d3749b8d5e41828f2797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PortalGrab
-  grabRange: 3
+  grabRange: 12
   holdForce: 300
   throwForce: 5
   grabPoint: {fileID: 2133465142}
@@ -6885,7 +6885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.65882355}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -14647,16 +14647,8 @@ PrefabInstance:
       value: BOX
       objectReference: {fileID: 0}
     - target: {fileID: 1329090326856697841, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1329090326856697841, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
       propertyPath: m_TagString
       value: Grabbable
-      objectReference: {fileID: 0}
-    - target: {fileID: 1530356090854475972, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1817818386005220683, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14696,10 +14688,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1817818386005220683, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7378860790707255984, guid: 96fe63eae6d0bd740bef3a63cd8cf976, type: 3}
-      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
