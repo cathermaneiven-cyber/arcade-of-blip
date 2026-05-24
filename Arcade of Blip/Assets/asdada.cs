@@ -3,8 +3,8 @@ using UnityEngine;
 public class PortalGrab : MonoBehaviour
 {
     [Header("Grab Settings")]
-    public float grabRange = 12f;
-    public float holdForce = 300f;
+    public float grabRange  = 12f;
+    public float holdForce  = 300f;
     public float throwForce = 20f;
 
     [Header("References")]
@@ -14,14 +14,24 @@ public class PortalGrab : MonoBehaviour
     int originalLayer;
     float rotateSmooth = 12f;
 
+    const string GrabLayer = "NonCollidable";
+    int grabLayerIndex = -1;
+
+    void Start()
+    {
+        grabLayerIndex = LayerMask.NameToLayer(GrabLayer);
+
+        if (grabLayerIndex == -1)
+            Debug.LogError($"[PortalGrab] Layer \"{GrabLayer}\" not found! " +
+                           "Go to Edit > Project Settings > Tags and Layers and add it.");
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (grabbed == null)
-                TryGrab();
-            else
-                Drop();
+            if (grabbed == null) TryGrab();
+            else                 Drop();
         }
 
         if (grabbed != null && Input.GetMouseButtonDown(0))
@@ -34,28 +44,29 @@ public class PortalGrab : MonoBehaviour
         {
             Vector3 toPoint = grabPoint.position - grabbed.position;
             grabbed.linearVelocity = toPoint * holdForce * Time.fixedDeltaTime;
-
-            Quaternion targetRot = grabPoint.rotation;
-            grabbed.MoveRotation(Quaternion.Slerp(grabbed.rotation, targetRot, Time.fixedDeltaTime * rotateSmooth));
+            grabbed.MoveRotation(Quaternion.Slerp(
+                grabbed.rotation, grabPoint.rotation,
+                Time.fixedDeltaTime * rotateSmooth));
         }
     }
 
     void TryGrab()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        // Don't attempt grab if layer isn't set up
+        if (grabLayerIndex == -1)
+        {
+            Debug.LogError($"[PortalGrab] Cannot grab — layer \"{GrabLayer}\" is missing.");
+            return;
+        }
 
+        Ray ray = new Ray(transform.position, transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, grabRange))
         {
             if (hit.rigidbody != null && hit.collider.CompareTag("Grabbable"))
             {
                 grabbed = hit.rigidbody;
-
-                // Save original layer
-                originalLayer = grabbed.gameObject.layer;
-
-                // Switch to NonCollidable layer
-                grabbed.gameObject.layer = LayerMask.NameToLayer("NonCollidable");
-
+                originalLayer = grabbed.gameObject.layer;       // save
+                grabbed.gameObject.layer = grabLayerIndex;      // switch
                 grabbed.useGravity = false;
                 grabbed.linearDamping = 10f;
             }
@@ -65,10 +76,7 @@ public class PortalGrab : MonoBehaviour
     void Drop()
     {
         if (grabbed == null) return;
-
-        // Restore original layer
-        grabbed.gameObject.layer = originalLayer;
-
+        grabbed.gameObject.layer = originalLayer;   // restore
         grabbed.useGravity = true;
         grabbed.linearDamping = 0f;
         grabbed = null;
@@ -77,10 +85,7 @@ public class PortalGrab : MonoBehaviour
     void Throw()
     {
         if (grabbed == null) return;
-
-        // Restore original layer
-        grabbed.gameObject.layer = originalLayer;
-
+        grabbed.gameObject.layer = originalLayer;   // restore
         grabbed.useGravity = true;
         grabbed.linearDamping = 0f;
         grabbed.AddForce(transform.forward * throwForce, ForceMode.VelocityChange);
